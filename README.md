@@ -71,3 +71,46 @@ resource (its size is zero), and a non-empty one at offset 0 in bank 1.
 
 There a multiple resources whose size are zero; three of them have the same
 bank ID and offset: 8 and 115980.
+
+The following numbers match the code review linked above:
+
+```
+$ sqlite3 -init sqliterc.txt exploring.db \
+    'select type, count(type) as total from memlist
+     group by type order by total desc'
+-- Loading resources from sqliterc.txt
+type        total
+----------  ----------
+Sound       103
+PolyAnim    12
+Palette     9
+Cinematic   9
+ByteCode    9
+Music       3
+Unknown     1
+LastEntry   1
+```
+
+
+### Palettes
+
+All resources of type `Palette` have an uncompressed size of 2048 (and their
+sizes within the `BANK` files are smaller, so the palettes are all compressed).
+
+```
+$ sqlite3 -init sqliterc.txt exploring.db \
+    'select bank_id,bank_offset,size,packed_size from memlist
+     where type="Palette" order by bank_id, bank_offset'
+-- Loading resources from sqliterc.txt
+bank_id     bank_offset  size        packed_size
+----------  -----------  ----------  -----------
+1           95176        2048        836
+1           102512       2048        1336
+3           0            2048        1196
+9           0            2048        1268
+10          0            2048        1260
+10          30140        2048        1312
+11          0            2048        1220
+13          0            2048        1228
+13          60108        2048        1376
+```
