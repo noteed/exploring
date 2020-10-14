@@ -16,6 +16,7 @@ me curious and I wanted to read more. I found the resources linked below.
 - [Code review by Fabien Sanglard](https://fabiensanglard.net/anotherWorld_code_review/)
 - [Code of the above review](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter)
 - ["The polygons of" series](https://fabiensanglard.net/another_world_polygons/)
+- [raw(gl)](https://github.com/cyxx)
 
 It seems the data of the PC version can be downloaded
 [here](https://www.abandonware-france.org/ltf_abandon/ltf_jeu.php?id=68).
@@ -23,6 +24,15 @@ It seems the data of the PC version can be downloaded
 One of the most interesting resources is actually a commentary within the [main
 file](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/8afc0f7d7d47f7700ad2e7d1cad33200ad29b17f/src/main.cpp)
 in the above repository.
+
+Some code is more readable in the original repository than in Fabien's. For
+instance the code to decompress resources:
+[Fabien's](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/master/src/bank.cpp)
+v. [Gregrory's](https://github.com/cyxx/rawgl/blob/master/unpack.cpp)
+
+The commit comment in Gregrory's seems to say the unpacking code is similar to
+this one: https://git.gatekiller.co.uk/games/flashback.
+[Indeed](https://git.gatekiller.co.uk/games/flashback/src/branch/master/unpack.cpp).
 
 
 ## Current state
@@ -97,6 +107,18 @@ LastEntry   1
 
 And also match the reported (packed) size here in the [source
 code](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/8afc0f7d7d47f7700ad2e7d1cad33200ad29b17f/src/main.cpp#L201-L208).
+
+When reading a resource out of a bank, the last 32 bits indicate the size of
+the unpacked data (and thus should match what is found in `MEMLIST.BIN`). For
+instance, the very first palette can be extracted (but not unpacked yet) with:
+
+```
+$ scripts/build.sh && bin/exploring read-bank 1 95176 836 > palette-1
+$ xxd palette-1 | tail -n 1
+00000340: 0000 0800
+```
+
+We see that `8 * 256 = 2048`, wich is indeed the unpacked size of any palette.
 
 
 ### Palettes

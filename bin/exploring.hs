@@ -4,9 +4,12 @@ module Main where
 import Data.Binary
 import Data.Binary.Get
 import Data.ByteString (ByteString)
+import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
 import Data.List (intersperse)
 import System.Environment (getArgs)
+import System.IO (hClose, hSeek, openFile, IOMode(ReadMode), SeekMode(AbsoluteSeek))
+import Text.Printf (printf)
 
 
 --------------------------------------------------------------------------------
@@ -22,6 +25,13 @@ main = do
         \state, type, packed_size, size, rank_num, bank_id, bank_offset) VALUES"
       mapM_ putStr (intersperse ",\n" (map toSQLTuple entries))
       putStrLn ";"
+
+    ["read-bank", bankId, bankOffset, packedSize] -> do
+      -- For instance to read the first pallete, which has also the smallest
+      -- packed size:
+      -- read-bank 1 95176 836
+      s <- readBank (read bankId) (read bankOffset) (read packedSize)
+      B.putStr s
 
     _ -> do
       -- More-or-less confirm we can read MEMLIST.BIN.
@@ -44,6 +54,19 @@ toSQLTuple MemEntry{..} = concat
   , show meBankId ++ ", "
   , show meBankOffset ++ ")"
   ]
+
+
+--------------------------------------------------------------------------------
+readBank :: Int -> Int -> Int -> IO B.ByteString
+readBank bankId bankOffset packedSize = do
+  let filename = "another-world/BANK" ++ printf "%02x" bankId
+  handle <- openFile filename ReadMode
+  hSeek handle AbsoluteSeek (fromIntegral bankOffset)
+  s <- B.hGet handle packedSize
+  hClose handle
+  if B.length s < packedSize
+    then error "Can't read bank."
+    else return s
 
 
 --------------------------------------------------------------------------------
