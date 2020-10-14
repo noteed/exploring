@@ -47,6 +47,9 @@ toSQLTuple MemEntry{..} = concat
 
 
 --------------------------------------------------------------------------------
+-- Data deserialization.
+-- Note that data are in big-endian format (similar to Atari and Amiga CPUs).
+
 -- This struct is described at, and populated at:
 -- https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/master/src/resource.h#L34-L48
 -- -- https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/master/src/resource.cpp#L85-L96

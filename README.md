@@ -3,7 +3,7 @@
 I'm trying to explore how is implemented Another World.
 
 It all started yesterday (2020-10-11) when I finally, after a long time, played
-again with graphics prograning in Haskell, more specifically with SDL2, and I
+again with graphics programming in Haskell, more specifically with SDL2, and I
 started the `noteed/loading` repository. Then this night, I had some trouble
 sleeping and started to read about Another World. In particular, the Wikipedia
 page in French talks about a virtual machine running multiple threads. This got
@@ -19,6 +19,10 @@ me curious and I wanted to read more. I found the resources linked below.
 
 It seems the data of the PC version can be downloaded
 [here](https://www.abandonware-france.org/ltf_abandon/ltf_jeu.php?id=68).
+
+One of the most interesting resources is actually a commentary within the [main
+file](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/8afc0f7d7d47f7700ad2e7d1cad33200ad29b17f/src/main.cpp)
+in the above repository.
 
 
 ## Current state
@@ -91,6 +95,9 @@ Unknown     1
 LastEntry   1
 ```
 
+And also match the reported (packed) size here in the [source
+code](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/8afc0f7d7d47f7700ad2e7d1cad33200ad29b17f/src/main.cpp#L201-L208).
+
 
 ### Palettes
 
@@ -114,3 +121,8 @@ bank_id     bank_offset  size        packed_size
 13          0            2048        1228
 13          60108        2048        1376
 ```
+
+The comment in the [source
+code](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/master/src/resource.h#L74)
+says the 2048 bytes are used for a VGA palette, and an EGA palette, each 1024
+bytes.
