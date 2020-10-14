@@ -3,5 +3,8 @@ CREATE TABLE memlist (
   state TEXT NOT NULL,
   type ENUM NOT NULL,
   packed_size INTEGER NOT NULL,
-  size INTEGER NOT NULL
+  size INTEGER NOT NULL,
+  rank_num INTEGER NOT NULL,
+  bank_id INTEGER NOT NULL,
+  bank_offset INTEGER NOT NULL
 );

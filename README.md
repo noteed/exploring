@@ -47,3 +47,27 @@ $ make exploring.db && sqlite3 exploring.db \
     'SELECT sum(size) FROM memlist WHERE type != "LastEntry"'
 1730258
 ```
+
+Having such a relational database to query is really a nice way to explore the
+data.
+
+
+## Notes
+
+There are 13 `BANK` files, from `BANK01` to `BANK0D`. Bank IDs in `MEMLIST.BIN`
+are numeric, thus ranging from 1 to 13. A given bank can contain multiple
+resource types. For instance the bank 9 contains resource types `Palette`,
+`ByteCode`, and `Cinematic`:
+
+```
+$ sqlite3 exploring.db 'SELECT type FROM memlist WHERE bank_id=9'
+Palette
+ByteCode
+Cinematic
+```
+
+The first resouce in each bank starts at offset 0. There are an "empty"
+resource (its size is zero), and a non-empty one at offset 0 in bank 1.
+
+There a multiple resources whose size are zero; three of them have the same
+bank ID and offset: 8 and 115980.
