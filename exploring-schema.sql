@@ -1,0 +1,7 @@
+CREATE TABLE memlist (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  state TEXT NOT NULL,
+  type ENUM NOT NULL,
+  packed_size INTEGER NOT NULL,
+  size INTEGER NOT NULL
+);

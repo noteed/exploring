@@ -26,7 +26,7 @@ It seems the data of the PC version can be downloaded
 I have a small script that reads the `MEMLIST.BIN` files:
 
 ```
-$ scripts/build.sh && bin/exploring 
+$ make && bin/exploring
 [1 of 1] Compiling Main             ( bin/exploring.hs, bin/exploring.o )
 Linking bin/exploring ...
 Exploring Another World...
@@ -38,3 +38,12 @@ The last entry has a LastEntry state: True
 
 Note: the above code review talks about 146 "resources" and 148 "bank files".
 I guess the second number is a mistake...
+
+I also can generate some SQL `INSERT`s to represent the content of
+`MEMLIST.BIN` file as a SQLite database.
+
+```
+$ make exploring.db && sqlite3 exploring.db \
+    'SELECT sum(size) FROM memlist WHERE type != "LastEntry"'
+1730258
+```

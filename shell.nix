@@ -4,5 +4,6 @@
       pkgs.ghcid
       (pkgs.haskellPackages.ghcWithPackages (hpkgs: [
       ]))
+      pkgs.sqlite
     ];
 }

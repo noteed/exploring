@@ -1,0 +1,7 @@
+.*.swp
+another-world/
+bin/exploring
+*.hi
+*.o
+exploring-memlist.sql
+exploring.db
