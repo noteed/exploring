@@ -38,7 +38,7 @@ main = do
     ["write-palette", n] -> do
       -- Write the ith palette from unpacked.bin to a .png file.
       let i = read n
-      colors <- readColors "unpacked.bin"
+      colors <- readColors "resources/unpacked-020.bin"
       -- Skip i palettes, and each color will cover 20 pixels.
       let f x y = (drop (i * 16) colors) !! (x `div` 20)
           img = generateImage f 320 240

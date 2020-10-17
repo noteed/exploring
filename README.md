@@ -214,10 +214,15 @@ a resource from a `BANK` file:
 $ ls unpack
 unpack.cpp
 $ g++ -o unpack/unpack unpack/unpack.cpp
-$ ./unpack
-$ ls -l unpacked
--rw-r--r-- 1 thu users  2048 Oct 17 14:45 unpacked.bin
+$ unpack/unpack 020 1 95176 836 2048
+$ ls -l resources/unpacked-020.bin
+-rw-r--r-- 1 thu users  2048 Oct 17 14:45 resources/unpacked-020.bin
 ```
+
+The arguments are the resource ID (this is just used to name the output file),
+the bank ID, the offset within the BANK file, the packed size, and the unpacked
+size. A helper script `scripts/unpack-all.sh` is generated with the appropriate
+values. 
 
 
 ## Parts
@@ -248,3 +253,24 @@ id          palette     bytecode    cinematics  characters  comment
 16008       125         126         127         0           password screen
 16009       125         126         127         0           password screen
 ```
+
+
+## Bytecode
+
+The list of possible operations is visible in `staticres.cpp`. There are only
+27 operations.
+
+Just like palettes, the "script" ID of each game part is given in the
+hard-coded data (see the Parts section above). The virtual machine implemented
+in the game reads a byte at at a time, interpreting it. (This is done in the
+`vm.cpp` file.) Each operation can read additional bytes when executed.
+
+
+# TODO
+
+A possible organisation for these notes, once they ar more complete: start with
+the DOS files, i.e. describe `BANK`s and `MEMLIST.BIN`. Then continue with
+hard-coded data within the source code, in particular "parts".
+
+Then describe each type of resources, starting with Palette (the smallest
+resources). Then bytecode ?

@@ -126,12 +126,15 @@ bool bytekiller_unpack(uint8_t *dst, int dstSize, const uint8_t *src, int srcSiz
         return uc.crc == 0;
 }
 
-int main() {
-        // The values are for the first (and smallest) palette.
-        int bankId = 1;
-        int bankOffset = 95176;
-        int srcSize = 836;
-        int dstSize = 2048;
+int main(int argc, char *argv[]) {
+	// Values are given in MEMLIST.BIN, and thus in the memlist SQLite
+	// table. A helper script scripts/unpack-all.sh is given to provide the
+	// right values.
+	int resourceId = std::stoi(argv[1]);
+	int bankId = std::stoi(argv[2]);
+	int bankOffset = std::stoi(argv[3]);
+	int srcSize = std::stoi(argv[4]);
+	int dstSize = std::stoi(argv[5]);
 
         char bankPath[32];
         sprintf(bankPath, "another-world/BANK%02x", bankId);
@@ -149,8 +152,11 @@ int main() {
 
         bytekiller_unpack(dst, dstSize, src, srcSize);
 
+        char outputPath[32];
+        sprintf(outputPath, "resources/unpacked-%03d.bin", resourceId);
+
         std::ofstream os;
-        os.open("unpacked.bin", std::ios::out | std::ios::binary);
+        os.open(outputPath, std::ios::out | std::ios::binary);
         os.write((char *)dst, dstSize);
         os.close();
 }
