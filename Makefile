@@ -1,4 +1,4 @@
-
+ALL: bin/exploring exploring.db
 
 bin/exploring: bin/exploring.hs
 	scripts/build.sh
