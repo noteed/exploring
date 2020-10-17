@@ -5,3 +5,9 @@ bin/exploring
 *.o
 exploring-memlist.sql
 exploring.db
+Another-World-Bytecode-Interpreter/
+images/
+rawgl/
+resources/
+scripts/unpack-all.sh
+unpack/unpack
