@@ -1,23 +1,33 @@
 # Exploring Another World
 
-I'm trying to explore how Eric Chahi's Another World is implemented.
+In this repository, I explore how Eric Chahi's Another World is implemented.
+Another World is a computer game released in 1991. It was initially written for
+the Amiga 500, and then ported to other systems. A very interesting aspect of
+the software is that it is mainly written as a virtual machine.
 
-It all started yesterday (2020-10-11) when I finally, after a long time, played
-again with graphics programming in Haskell, more specifically with SDL2, and I
-started the `noteed/loading` repository. Then the night after, I had some
-trouble sleeping and started to read about Another World. In particular, the
-Wikipedia page in French talks about a virtual machine running multiple
+It all started the 2020-10-11 when I finally, after a long time, decided to
+play again with graphics programming in Haskell. (This probably was itself
+prompted by turning on my PlayStation 3, running Grid, whose first saved game
+was from 2010). Then the night after, I had some trouble sleeping and started
+to read about Another World. In particular, the Wikipedia page (at least the
+one [in
+French](https://fr.wikipedia.org/wiki/Another_World_(jeu_vid%C3%A9o)#Aspect_technique)
+talks about a a game engine witten as a virtual machine running multiple light
 threads. This got me curious and I wanted to read more. I started with the
 resources linked below, then wrote some code to explore the game data.
 
 
 ## Resources
 
-- [Eric Chahi's page](http://www.anotherworld.fr/anotherworld_uk/another_world.htm)
-- [Code review by Fabien Sanglard](https://fabiensanglard.net/anotherWorld_code_review/)
-- [Code of the above review](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter)
-- ["The polygons of" series](https://fabiensanglard.net/another_world_polygons/)
-- [raw(gl)](https://github.com/cyxx)
+- [Eric Chahi's
+  page](http://www.anotherworld.fr/anotherworld_uk/another_world.htm)
+- [Code review by Fabien
+  Sanglard](https://fabiensanglard.net/anotherWorld_code_review/)
+- [Source code of the above
+  review](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter)
+- ["The polygons of"
+  series](https://fabiensanglard.net/another_world_polygons/)
+- [Gregory Montoir's raw(gl)](https://github.com/cyxx)
 
 It seems the data of the PC version can be downloaded
 [here](https://www.abandonware-france.org/ltf_abandon/ltf_jeu.php?id=68).
@@ -29,7 +39,7 @@ in the above repository.
 Some code is more readable in the original repository than in Fabien's. For
 instance the code to decompress resources:
 [Fabien's](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/master/src/bank.cpp)
-v. [Gregrory's](https://github.com/cyxx/rawgl/blob/master/unpack.cpp)
+v. [Gregory's](https://github.com/cyxx/rawgl/blob/master/unpack.cpp)
 
 The commit comment in Gregrory's seems to say the unpacking code is similar to
 this one: https://git.gatekiller.co.uk/games/flashback.
@@ -38,7 +48,7 @@ this one: https://git.gatekiller.co.uk/games/flashback.
 
 ## Current state
 
-I have a small script that reads the `MEMLIST.BIN` files:
+I have a small Haskell script that reads the `MEMLIST.BIN` files:
 
 ```
 $ make && bin/exploring
@@ -64,7 +74,7 @@ $ make exploring.db && sqlite3 exploring.db \
 ```
 
 Having such a relational database to query is really a nice way to explore the
-data.
+data, as can be seen in some notes below.
 
 
 ## Notes
@@ -183,7 +193,8 @@ $ feh -Zr. images/
 While trying to understand `Bank::unpack` in Fabien's repository, I found that
 Gregory's version in rawgl is easier to read. I looked at the code several
 times on the span of three or four days. Interestingly, my understanding of it
-increaseds each time in the first few minutes at staring at the code.
+increased each time in the first few minutes at staring at the code (as opposed
+to the long minutes afterwards).
 
 Anyway, I also found an interesting commit message in rawgl, mentionning
 "ByteKiller". I first thought it was another version of similar code but it
