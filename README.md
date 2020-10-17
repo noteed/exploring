@@ -179,8 +179,12 @@ $ feh images/palette-01.png
 ```
 
 ![Palette 1](images/palette-01.png)
+![Palette 27](images/palette-27.png)
 
-Only the image above is committed in this repository. If you want to generate
+I was unsure if the code to read the palette was correct, but the second image
+above seems to match the colors seen in the title screens at the start of game.
+
+Only the two images above are committed in this repository. If you want to generate
 some other images:
 
 ```
