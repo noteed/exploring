@@ -149,3 +149,30 @@ The comment in the [source
 code](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/master/src/resource.h#L74)
 says the 2048 bytes are used for a VGA palette, and an EGA palette, each 1024
 bytes.
+
+
+## Unpack
+
+While trying to understand `Bank::unpack` in Fabien's repository, I found that
+Gregory's version in rawgl is easier to read. I looked at the code several
+times on the span of three or four days. Interestingly, my understanding of it
+increaseds each time in the first few minutes at staring at the code.
+
+Anyway, I also found an interesting commit message in rawgl, mentionning
+"ByteKiller". I first thought it was another version of similar code but it
+seems it is the name of the compression software: as it was mentioned nowhere
+else, this is an interesting find!
+
+I have made a copy of rawgl's `unpack.cpp` in `unpack/` in this repository.
+After adding the `READ_BE_UINT32` macro and the `warning` function, the file
+compiles fine with `g++ -c unpack.cpp`. Then I added a `main` function to read
+a resource from a `BANK` file:
+
+```
+$ ls unpack
+unpack.cpp
+$ g++ -o unpack/unpack unpack/unpack.cpp
+$ ./unpack
+$ ls -l unpacked
+-rw-r--r-- 1 thu users  2048 Oct 17 14:45 unpacked.bin
+```
