@@ -265,6 +265,32 @@ hard-coded data (see the Parts section above). The virtual machine implemented
 in the game reads a byte at at a time, interpreting it. (This is done in the
 `vm.cpp` file.) Each operation can read additional bytes when executed.
 
+Within a Bytecode resource, there is the code for multiple threads. Thread 0
+starts with the first byte of the bytecode. I'm not sure yet, but I think the
+other threads are spawned from other threads and don't exist statically.
+
+I have a rudimentary bytecode parser. I don't know if it is correct yet; I had
+to include am `OpInvalid` opcode to let it parse the first Bytecode resource
+(21). At least there are as many `OpCall` as `OpRet`...
+
+```
+$ bin/exploring write-bytecode 21 | head
+OpCall 4304
+OpMovConst 255 2
+OpSetSetVect 60 4259
+OpPauseThread
+OpFillVideoPage 0 7
+OpSetSetVect 20 718
+OpKillThread
+OpKillThread
+OpAddConst 99 1
+OpAddConst 90 13
+$ bin/exploring write-bytecode 21 | grep OpCall | wc -l
+72
+$ bin/exploring write-bytecode 21 | grep OpRet | wc -l
+72
+```
+
 
 # TODO
 

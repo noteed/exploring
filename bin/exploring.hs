@@ -44,6 +44,12 @@ main = do
           img = generateImage f 320 240
       writePng (printf "images/palette-%02d.png" i) img
 
+    ["write-bytecode", r] -> do
+      -- Write the bytecode from resource n to stdout.
+      let i = read r :: Int
+      bytecode <- readBytecode (printf "resources/unpacked-%03d.bin" i)
+      mapM_ print bytecode
+
     _ -> do
       -- More-or-less confirm we can read MEMLIST.BIN.
       putStrLn "Exploring Another World..."
@@ -121,8 +127,60 @@ data ResourceType =
   | ResourceTypeLastEntry -- ^ 255
   deriving (Eq, Show)
 
+-- | Virtual machine operations (opcodes).
+data Op =
+    -- 0x00
+    OpMovConst Word8 Word16
+  | OpMov Word8 Word8
+  | OpAdd Word8 Word8
+  | OpAddConst Word8 Word16
+    -- 0x04
+  | OpCall Word16
+  | OpRet
+  | OpPauseThread
+  | OpJmp Word16
+    -- 0x08
+  | OpSetSetVect Word8 Word16
+  | OpJnz Word8 Word16
+  | OpCondJmp OpCondJmp
+  | OpSetPalette Word16
+    -- 0x0C
+  | OpResetThread Word8 Word8 Word8
+  | OpSelectVideoPage Word8
+  | OpFillVideoPage Word8 Word8
+  | OpCopyVideoPage Word8 Word8
+    -- 0x10
+  | OpBlitFramebuffer Word8
+  | OpKillThread
+  | OpDrawString Word16 Word8 Word8 Word8
+  | OpSub Word8 Word8
+    -- 0x14
+  | OpAnd Word8 Word16
+  | OpOr Word8 Word16
+  | OpShl Word8 Word16
+  | OpShr Word8 Word16
+    -- 0x18
+  | OpPlaySound Word16 Word8 Word8 Word8
+  | OpUpdateMemList Word16
+  | OpPlayMusic Word16 Word16 Word8
+
+  | OpInvalid Word8
+  deriving Show
+
+data OpComp = Jz | Jnz | Jg | Jge | Jl | Jle
+  deriving Show
+
+data OpCondJmp =
+    OpCondJmpVar OpComp Word8 Word8 Word16
+  | OpCondJmpWord16 OpComp Word8 Word16 Word16
+  | OpCondJmpWor8 OpComp Word8 Word8 Word16
+  deriving Show
+
 
 --------------------------------------------------------------------------------
+-- MEMLIST.BIN stuff.
+
+
 readMemEntries :: String -> IO [MemEntry]
 readMemEntries fn = do
   input <- BL.readFile fn
@@ -179,6 +237,8 @@ getResourceType = do
 
 
 --------------------------------------------------------------------------------
+-- Palette stuff.
+
 readColors :: String -> IO [PixelRGB8]
 readColors fn = do
   input <- BL.readFile fn
@@ -207,3 +267,149 @@ getColor = do
       g = ((shiftR j 2) .|. (shiftR j 6)) `shiftL` 2
       b = ((shiftR k 2) .|. (shiftL k 2)) `shiftL` 2
   return (PixelRGB8 r g b)
+
+
+--------------------------------------------------------------------------------
+-- Bytecode stuff.
+
+readBytecode :: String -> IO [Op]
+readBytecode fn = do
+  input <- BL.readFile fn
+  return (runGet getBytecode input)
+
+getBytecode :: Get [Op]
+getBytecode = do
+  empty <- isEmpty
+  if empty
+    then return []
+    else do
+      o <- getOp
+      os <- getBytecode
+      return (o : os)
+
+getOp :: Get Op
+getOp = do
+  b <- getWord8
+  case b of
+    0x00 -> do
+      var <- getWord8
+      value <- getWord16be
+      return (OpMovConst var value)
+    0x01 -> do
+      var0 <- getWord8
+      var1 <- getWord8
+      return (OpMov var0 var1)
+    0x02 -> do
+      var0 <- getWord8
+      var1 <- getWord8
+      return (OpAdd var0 var1)
+    0x03 -> do
+      var <- getWord8
+      value <- getWord16be
+      return (OpAddConst var value)
+    0x04 -> do
+      addr <- getWord16be
+      return (OpCall addr)
+    0x05 -> return OpRet
+    0x06 -> return OpPauseThread
+    0x07 -> do
+      offset <- getWord16be
+      return (OpJmp offset)
+    0x08 -> do
+      thread <- getWord8
+      offset <- getWord16be
+      return (OpSetSetVect thread offset)
+    0x09 -> do
+      var <- getWord8
+      addr <- getWord16be
+      return (OpJnz var addr)
+    0x0A -> do
+      opcode <- getWord8
+      var <- getWord8
+      let comp = case opcode .&. 7 of
+                   0 -> Jz
+                   1 -> Jnz
+                   2 -> Jg
+                   3 -> Jge
+                   4 -> Jl
+                   5 -> Jle
+                   _ -> error "Invalid OpCondJmp comparison."
+      case opcode of
+        _ | (opcode .&. 0x80) /= 0 -> do
+          var1 <- getWord8
+          addr <- getWord16be
+          return (OpCondJmp $ OpCondJmpVar comp var var1 addr)
+        _ | (opcode .&. 0x40) /= 0 -> do
+          value <- getWord16be
+          addr <- getWord16be
+          return (OpCondJmp $ OpCondJmpWord16 comp var value addr)
+        _ -> do
+          value <- getWord8
+          addr <- getWord16be
+          return (OpCondJmp $ OpCondJmpWor8 comp var value addr)
+    0x0B -> do
+      palette <- getWord16be
+      return (OpSetPalette palette)
+    0x0C -> do
+      thread <- getWord8
+      a <- getWord8
+      b <- getWord8
+      return (OpResetThread thread a b)
+    0x0D -> do
+      framebuffer <- getWord8
+      return (OpSelectVideoPage framebuffer)
+    0x0E -> do
+      page <- getWord8
+      color <- getWord8
+      return (OpFillVideoPage page color)
+    0x0F -> do
+      pageSrc <- getWord8
+      pageDst <- getWord8
+      return (OpCopyVideoPage pageSrc pageDst )
+    0x10 -> do
+      page <- getWord8
+      return (OpBlitFramebuffer page)
+    0x11 -> return OpKillThread
+    0x12 -> do
+      str <- getWord16be
+      x <- getWord8
+      y <- getWord8
+      color <- getWord8
+      return (OpDrawString str x y color)
+    0x13 -> do
+      var0 <- getWord8
+      var1 <- getWord8
+      return (OpSub var0 var1)
+    0x14 -> do
+      var <- getWord8
+      value <- getWord16be
+      return (OpAnd var value)
+    0x15 -> do
+      var <- getWord8
+      value <- getWord16be
+      return (OpOr var value)
+    0x16 -> do
+      var <- getWord8
+      value <- getWord16be
+      return (OpShl var value)
+    0x17 -> do
+      var <- getWord8
+      value <- getWord16be
+      return (OpShr var value)
+    0x18 -> do
+      resource <- getWord16be
+      freq <- getWord8
+      vol <- getWord8
+      channel <- getWord8
+      return (OpPlaySound resource freq vol channel)
+    0x19 -> do
+      resource <- getWord16be
+      return (OpUpdateMemList resource)
+    0x1A -> do
+      num <- getWord16be
+      delay <- getWord16be
+      pos <- getWord8
+      return (OpPlayMusic num delay pos)
+    _ -> do
+      -- error (printf "Unexpected opcode 0x%02x" b)
+      return (OpInvalid b)
