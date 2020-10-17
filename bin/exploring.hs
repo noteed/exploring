@@ -1,8 +1,10 @@
 {-# LANGUAGE RecordWildCards #-}
 module Main where
 
+import Codec.Picture (generateImage, writePng, PixelRGB8(PixelRGB8))
 import Data.Binary
 import Data.Binary.Get
+import Data.Bits
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
@@ -32,6 +34,15 @@ main = do
       -- read-bank 1 95176 836
       s <- readBank (read bankId) (read bankOffset) (read packedSize)
       B.putStr s
+
+    ["write-palette", n] -> do
+      -- Write the ith palette from unpacked.bin to a .png file.
+      let i = read n
+      colors <- readColors "unpacked.bin"
+      -- Skip i palettes, and each color will cover 20 pixels.
+      let f x y = (drop (i * 16) colors) !! (x `div` 20)
+          img = generateImage f 320 240
+      writePng (printf "images/palette-%02d.png" i) img
 
     _ -> do
       -- More-or-less confirm we can read MEMLIST.BIN.
@@ -164,3 +175,34 @@ getResourceType = do
     5 -> return ResourceTypeCinematic
     6 -> return ResourceTypeUnknown
     255 -> return ResourceTypeLastEntry
+
+
+--------------------------------------------------------------------------------
+readColors :: String -> IO [PixelRGB8]
+readColors fn = do
+  input <- BL.readFile fn
+  return (runGet getColors input)
+
+getColors :: Get [PixelRGB8]
+getColors = do
+  empty <- isEmpty
+  if empty
+    then return []
+    else do
+      c <- getColor
+      cs <- getColors
+      return (c : cs)
+
+-- The bit manipulation to convert from 2-bytes 565 representation to
+-- RGB8 is from Fabien's `sysImplementation.cpp`.
+getColor :: Get PixelRGB8
+getColor = do
+  byte1 <- getWord8
+  byte2 <- getWord8
+  let i = byte1 .&. 0x0F
+      j = byte2 .&. 0xF0
+      k = byte2 .&. 0x0F
+      r = ((shiftL i 2) .|. (shiftR i 2)) `shiftL` 2
+      g = ((shiftR j 2) .|. (shiftR j 6)) `shiftL` 2
+      b = ((shiftR k 2) .|. (shiftL k 2)) `shiftL` 2
+  return (PixelRGB8 r g b)

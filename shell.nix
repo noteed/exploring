@@ -3,6 +3,7 @@
     buildInputs = [
       pkgs.ghcid
       (pkgs.haskellPackages.ghcWithPackages (hpkgs: [
+        hpkgs.JuicyPixels
       ]))
       pkgs.sqlite
     ];

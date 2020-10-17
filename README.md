@@ -150,6 +150,33 @@ code](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/
 says the 2048 bytes are used for a VGA palette, and an EGA palette, each 1024
 bytes.
 
+In the game, each pixel color is given by a 4-bit index into the palette (so 1
+byte is enough to describe two pixels.
+
+Within the pallete, a color is specified using 5 bits for red, 6 bits for
+green, and 5 bits for blue, i.e. a 565 format, and thus takes 2 bytes.
+
+Given 2 bytes per color, and 16 colors, a palette is only 32 bytes. This seems
+to mean there is actually 32 palettes in a Palette resource.
+
+It is possible to convert the nth palette from BANK01 with the following calls.
+They expect the `unpacked.bin` files produced in the section below.
+(`palette-0` is all black.)
+
+```
+$ scripts/build.sh && bin/exploring write-palette 1
+$ feh images/palette-01.png
+```
+
+![Palette 1](images/palette-01.png)
+
+Only the image above is committed in this repository. If you want to generate
+some other images:
+
+```
+$ for i in `seq 1 32` ; do runghc bin/exploring.hs write-palette $i ; done
+$ feh -Zr. images/
+```
 
 ## Unpack
 
