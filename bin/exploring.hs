@@ -115,7 +115,7 @@ data ResourceType =
   | ResourceTypeMusic     -- ^ 1
   | ResourceTypePolyAnim  -- ^ 2
   | ResourceTypePalette   -- ^ 3
-  | ResourceTypeByteCode  -- ^ 4
+  | ResourceTypeBytecode  -- ^ 4
   | ResourceTypeCinematic -- ^ 5
   | ResourceTypeUnknown   -- ^ 6
   | ResourceTypeLastEntry -- ^ 255
@@ -172,7 +172,7 @@ getResourceType = do
     1 -> return ResourceTypeMusic
     2 -> return ResourceTypePolyAnim
     3 -> return ResourceTypePalette
-    4 -> return ResourceTypeByteCode
+    4 -> return ResourceTypeBytecode
     5 -> return ResourceTypeCinematic
     6 -> return ResourceTypeUnknown
     255 -> return ResourceTypeLastEntry

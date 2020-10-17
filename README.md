@@ -82,12 +82,12 @@ data, as can be seen in some notes below.
 There are 13 `BANK` files, from `BANK01` to `BANK0D`. Bank IDs in `MEMLIST.BIN`
 are numeric, thus ranging from 1 to 13. A given bank can contain multiple
 resource types. For instance the bank 9 contains resource types `Palette`,
-`ByteCode`, and `Cinematic`:
+`Bytecode`, and `Cinematic`:
 
 ```
 $ sqlite3 exploring.db 'SELECT type FROM memlist WHERE bank_id=9'
 Palette
-ByteCode
+Bytecode
 Cinematic
 ```
 
@@ -110,7 +110,7 @@ Sound       103
 PolyAnim    12
 Palette     9
 Cinematic   9
-ByteCode    9
+Bytecode    9
 Music       3
 Unknown     1
 LastEntry   1
