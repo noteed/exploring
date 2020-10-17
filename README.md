@@ -188,7 +188,7 @@ Only the two images above are committed in this repository. If you want to gener
 some other images:
 
 ```
-$ for i in `seq 1 32` ; do runghc bin/exploring.hs write-palette $i ; done
+$ for i in `seq 0 31` ; do bin/exploring write-palette $i ; done
 $ feh -Zr. images/
 ```
 
