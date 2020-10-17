@@ -229,3 +229,22 @@ and
 versions, the list of game "parts" are hard-coded, and for each part, the
 palette, virtual machine instructions, and graphics (both cinematics and
 gameplay) IDs (i.e. indices into `MEMLIST.BIN`) are known.
+
+I have also created hard-coded data for SQLite:
+
+```
+$ sqlite3 -init sqliterc.txt exploring.db 'select * from parts'
+-- Loading resources from sqliterc.txt
+id          palette     bytecode    cinematics  characters  comment
+----------  ----------  ----------  ----------  ----------  ------------------
+16000       20          21          22          0           protection screens
+16001       23          24          25          0           introduction cinem
+16002       26          27          28          17          water
+16003       29          30          31          17          suspended sail
+16004       32          33          34          17          cite
+16005       35          36          37          0           battlechar cinemat
+16006       38          39          40          17          luxe
+16007       41          42          43          17          final
+16008       125         126         127         0           password screen
+16009       125         126         127         0           password screen
+```
