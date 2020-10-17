@@ -203,3 +203,14 @@ $ ./unpack
 $ ls -l unpacked
 -rw-r--r-- 1 thu users  2048 Oct 17 14:45 unpacked.bin
 ```
+
+
+## Parts
+
+In both
+[Fabien's](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/6093bbca11b046a64557354eb4c237b0318f4ec7/src/parts.cpp)
+and
+[Gregory's](https://github.com/cyxx/rawgl/blob/8b4c255453229bca15df715961554f85adec8eb5/resource.cpp#L566-L577)
+versions, the list of game "parts" are hard-coded, and for each part, the
+palette, virtual machine instructions, and graphics (both cinematics and
+gameplay) IDs (i.e. indices into `MEMLIST.BIN`) are known.
