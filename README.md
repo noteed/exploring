@@ -257,21 +257,22 @@ id          palette     bytecode    cinematics  characters  comment
 
 ## Bytecode
 
-The list of possible operations is visible in `staticres.cpp`. There are only
-27 operations.
+The list of possible operations is mainly visible in `staticres.cpp`: there are only
+27 operations visible there but some additional ones are not named.
 
 Just like palettes, the "script" ID of each game part is given in the
 hard-coded data (see the Parts section above). The virtual machine implemented
-in the game reads a byte at at a time, interpreting it. (This is done in the
+in the game reads one byte at a time, interpreting it. (This is done in the
 `vm.cpp` file.) Each operation can read additional bytes when executed.
 
 Within a Bytecode resource, there is the code for multiple threads. Thread 0
 starts with the first byte of the bytecode. I'm not sure yet, but I think the
 other threads are spawned from other threads and don't exist statically.
 
-I have a rudimentary bytecode parser. I don't know if it is correct yet; I had
-to include am `OpInvalid` opcode to let it parse the first Bytecode resource
-(21). At least there are as many `OpCall` as `OpRet`...
+I have bytecode parser. To help validate it, I have found a
+[disassembler](https://github.com/cyxx/rawgl/blob/master/tools/disasm/disasm.cpp)
+in the rawgl repository. This is also helpful to give names to some operations
+that don't have explicit opcodes elsewhere.
 
 ```
 $ bin/exploring write-bytecode 21 | head
@@ -285,10 +286,6 @@ OpKillThread
 OpKillThread
 OpAddConst 99 1
 OpAddConst 90 13
-$ bin/exploring write-bytecode 21 | grep OpCall | wc -l
-72
-$ bin/exploring write-bytecode 21 | grep OpRet | wc -l
-72
 ```
 
 

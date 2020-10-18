@@ -163,8 +163,10 @@ data Op =
   | OpPlaySound Word16 Word8 Word8 Word8
   | OpUpdateMemList Word16
   | OpPlayMusic Word16 Word16 Word8
-
-  | OpInvalid Word8
+    -- 0x80, or 1000_0000, is set
+  | OpDrawPolygon8 Word8 Word8 Word8
+    -- 0x40, or 0100_0000, is set
+  | OpDrawPolygon16 Word16 Word8 Word8 Word8
   deriving Show
 
 data OpComp = Jz | Jnz | Jg | Jge | Jl | Jle
@@ -410,6 +412,29 @@ getOp = do
       delay <- getWord16be
       pos <- getWord8
       return (OpPlayMusic num delay pos)
+    -- TODO Some bit manipulation has to be done below. It is possible to
+    -- combine the Word8 and Word16 together.
+    -- TODO The correct polygon resource should be set: normal, or cinematic.
+    -- The offset is an offset into that resource.
+    _ | (b .&. 0x80) /= 0 -> do
+      offset <- getWord8
+      x <- getWord8
+      y <- getWord8
+      return (OpDrawPolygon8 offset x y) -- zoom is 64
+    _ | (b .&. 0x40) /= 0 -> do
+      offset <- getWord16be
+      x <- getWord8
+      _ <- if ((b .&. 0x20) == 0 && (b .&. 0x10) == 0)
+           then getWord8 -- TODO
+           else return 0
+      y <- getWord8
+      _ <- if ((b .&. 0x08) == 0 && (b .&. 0x04) == 0)
+           then getWord8 -- TODO
+           else return 0
+      zoom <- if ( ((b .&. 0x02) == 0 && (b .&. 0x01) /= 0)
+                || ((b .&. 0x02) /= 0 && (b .&. 0x01) == 0))
+              then getWord8 -- TODO
+              else return 0
+      return (OpDrawPolygon16 offset x y zoom)
     _ -> do
-      -- error (printf "Unexpected opcode 0x%02x" b)
-      return (OpInvalid b)
+      error (printf "Unexpected opcode 0x%02x" b)
