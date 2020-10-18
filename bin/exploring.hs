@@ -137,10 +137,10 @@ data Op =
     -- 0x04
   | OpCall Word16
   | OpRet
-  | OpPauseThread
+  | OpYieldThread
   | OpJmp Word16
     -- 0x08
-  | OpSetSetVect Word8 Word16
+  | OpSpawnThread Word8 Word16
   | OpJnz Word8 Word16
   | OpCondJmp OpCondJmp
   | OpSetPalette Word16
@@ -161,7 +161,7 @@ data Op =
   | OpShr Word8 Word16
     -- 0x18
   | OpPlaySound Word16 Word8 Word8 Word8
-  | OpUpdateMemList Word16
+  | OpUpdateResources Word16
   | OpPlayMusic Word16 Word16 Word8
     -- 0x80, or 1000_0000, is set
   | OpDrawPolygon8 Word8 Word8 Word8
@@ -313,14 +313,14 @@ getOp = do
       addr <- getWord16be
       return (OpCall addr)
     0x05 -> return OpRet
-    0x06 -> return OpPauseThread
+    0x06 -> return OpYieldThread
     0x07 -> do
       offset <- getWord16be
       return (OpJmp offset)
     0x08 -> do
       thread <- getWord8
       offset <- getWord16be
-      return (OpSetSetVect thread offset)
+      return (OpSpawnThread thread offset)
     0x09 -> do
       var <- getWord8
       addr <- getWord16be
@@ -406,7 +406,7 @@ getOp = do
       return (OpPlaySound resource freq vol channel)
     0x19 -> do
       resource <- getWord16be
-      return (OpUpdateMemList resource)
+      return (OpUpdateResources resource)
     0x1A -> do
       num <- getWord16be
       delay <- getWord16be
