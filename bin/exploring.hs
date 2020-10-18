@@ -143,7 +143,7 @@ data Op =
   | OpSpawnThread Word8 Word16
   | OpJnz Word8 Word16
   | OpCondJmp OpCondJmp
-  | OpSetPalette Word16
+  | OpSetPalette Word8
     -- 0x0C
   | OpResetThread Word8 Word8 Word8
   | OpSelectVideoPage Word8
@@ -350,7 +350,8 @@ getOp = do
           addr <- getWord16be
           return (OpCondJmp $ OpCondJmpWor8 comp var value addr)
     0x0B -> do
-      palette <- getWord16be
+      palette <- getWord8
+      _ <- getWord8 -- Ignored unles this is 3DO.
       return (OpSetPalette palette)
     0x0C -> do
       thread <- getWord8

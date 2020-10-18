@@ -278,10 +278,10 @@ that don't have explicit opcodes elsewhere.
 $ bin/exploring write-bytecode 21 | head
 OpCall 4304
 OpMovConst 255 2
-OpSetSetVect 60 4259
+OpSpawnThread 60 4259
 OpPauseThread
 OpFillVideoPage 0 7
-OpSetSetVect 20 718
+OpSpawnThread 20 718
 OpKillThread
 OpKillThread
 OpAddConst 99 1
