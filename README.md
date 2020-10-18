@@ -45,6 +45,8 @@ The commit comment in Gregrory's seems to say the unpacking code is similar to
 this one: https://git.gatekiller.co.uk/games/flashback.
 [Indeed](https://git.gatekiller.co.uk/games/flashback/src/branch/master/unpack.cpp).
 
+There is an interesting `docs/` directory in rawgl repository.
+
 
 ## Current state
 
@@ -222,7 +224,7 @@ $ ls -l resources/unpacked-020.bin
 The arguments are the resource ID (this is just used to name the output file),
 the bank ID, the offset within the BANK file, the packed size, and the unpacked
 size. A helper script `scripts/unpack-all.sh` is generated with the appropriate
-values. 
+values.
 
 
 ## Parts
@@ -287,6 +289,43 @@ OpKillThread
 OpAddConst 99 1
 OpAddConst 90 13
 ```
+
+
+## Polygons
+
+By reading how the OpDrawPolygon opcode is implemented in either source code,
+we can learn how graphic data can be found. This simply seems to be given by an
+offset into the graphic data (either cinematics or gameplay).
+
+
+## Font
+
+There is an array named `_font` in `staticres.cpp` with a hard-coded list of
+bytes. Also, in `video.cpp` there is a fonction `drawChar()`. In particular
+there is a line which offers a lot of clue:
+
+```
+    uint8_t *p = buf + x * 4 + y * 160;
+```
+
+The formula `x + y * stride` is typical of pixel addressing in a 1d-array. We
+already know that each byte represents a two pixels, which is confirmed by `*
+160`: advancing to the next line (i.e. by 320 pixels) is done by advancing by
+160 bytes.
+
+Then that function uses 8 consecutives entries in `_font` for a given
+character, advancing each time by 160 bytes. So I assume those 8 iterations are
+done to cover 8 pixels vertically.
+
+At each iteration, it loops 4 times horizontaly, exploiting each time 2 bits of
+a `_font` entry. So I assume each `_font` entry specifies 8 pixels that should
+"on" of "off".
+
+For each "on" pixel, 4 bits of the given color are used. When a pixel is "off",
+the color already present in the target buffer is reused.
+
+In short, the font is made from 8x8 characters, specified by 8 entries in
+`_font`. This is confirmed by the `bin/exploring-font.hs` script.
 
 
 # TODO
