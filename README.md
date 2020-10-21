@@ -290,6 +290,20 @@ OpAddConst 99 1
 OpAddConst 90 13
 ```
 
+```
+$ rawgl/tools/disasm/disasm resources/unpacked-021.bin |head
+0000: (04) call(@10D0)
+0003: (00) VAR(0xFF) = 2
+0007: (08) installTask(60, @10A3)
+000B: (06) yieldTask // PAUSE SCRIPT TASK
+000C: (0E) fillPage(page=0, color=7)
+000F: (08) installTask(20, @02CE)
+0013: (11) removeTask // STOP SCRIPT TASK
+0014: (11) removeTask // STOP SCRIPT TASK
+
+0015: // func_0015
+```
+
 
 ## Polygons
 
