@@ -291,7 +291,7 @@ OpAddConst 90 13
 ```
 
 ```
-$ rawgl/tools/disasm/disasm resources/unpacked-021.bin |head
+$ rawgl/tools/disasm/disasm resources/unpacked-021.bin | head
 0000: (04) call(@10D0)
 0003: (00) VAR(0xFF) = 2
 0007: (08) installTask(60, @10A3)
@@ -342,6 +342,71 @@ In short, the font is made from 8x8 characters, specified by 8 entries in
 `_font`. This is confirmed by the `bin/exploring-font.hs` script.
 
 
+## Steam
+
+Here are some information about the game files when purchasing Another World on
+Steam, which is the 20th anniversary edition, released April 4th, 2013.
+
+Below, `steam/` is a symlink to `~/.local/share/Steam/steamapps/common/Another
+World`.
+
+```
+$ du -chs steam/
+709M    steam/
+709M    total
+
+$ ls steam/
+amd64               Bonus        game                 layout_custom.xml  steam_appid.txt
+AnotherWorld        credits      hud.fsh              menubonus.bat      thumbs
+AnotherWorld-amd64  cursor.bmp   hud.vsh              menubonus.sh       x86
+AnotherWorld.png    default.fsh  icon.bmp             README-linux.txt   xdg-open
+AnotherWorld-x86    default.vsh  layout_1024x768.xml  ressources
+```
+
+An interesting thing is that this contains files with a `.nom` extension. I saw
+that extension in rawgl disassembler and in another tool which seems to be able
+to read polygons out of the game files.
+
+```
+$ find steam/ -iname '*.nom'
+steam/game/DAT/FINAL2011.nom
+steam/game/DAT/INTRO2011.nom
+steam/game/DAT/CITE2011.nom
+steam/game/DAT/LUXE2011.nom
+steam/game/DAT/BANK2hd.nom
+steam/game/DAT/PRI2011.nom
+steam/game/DAT/EAU2011.nom
+steam/game/DAT/BANK2.NOM
+```
+
+Looking to other files, I noticed some that are 2048 bytes, with a `.pal`
+extension. Surely those are unpacked palette resources ? I compared SHA1 sums
+of my unpacked resource files and one matches a `.pal` file in steam/game/DAT:
+
+```
+90d179214abc7cae251eb880c193abf6b628468d  resources/unpacked-023.bin
+90d179214abc7cae251eb880c193abf6b628468d  steam/game/DAT/INTRO2011.pa
+```
+
+There seems to be the Amiga version too:
+
+```
+$ ls steam/Bonus/rom\ Amiga/
+AnotherWorld_DiskA_nologo_noprotec.adf  AnotherWorld_DiskB_nologo_noprotec.adf
+```
+
+### Playing
+
+I set `fullscreen` to false in `~/.local/share/DotEMU/Another
+World/AnotherWorldUserDef.xml`. (For Steam on my T480, which uses NixOS and
+xmonad).
+
+When launching the game, there is a Steam menu to either view Bonus content,
+which just opens the directory within a browser...
+
+Within the game menu, it is possible to choose low or high resolution.
+
+
 # TODO
 
 A possible organisation for these notes, once they ar more complete: start with
@@ -350,3 +415,5 @@ hard-coded data within the source code, in particular "parts".
 
 Then describe each type of resources, starting with Palette (the smallest
 resources). Then bytecode ?
+
+
