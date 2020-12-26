@@ -265,7 +265,7 @@ id          palette     bytecode    cinematics  characters  comment
 16000       20          21          22          0           protection screens
 16001       23          24          25          0           introduction cinem
 16002       26          27          28          17          water
-16003       29          30          31          17          suspended sail
+16003       29          30          31          17          suspended jail
 16004       32          33          34          17          cite
 16005       35          36          37          0           battlechar cinemat
 16006       38          39          40          17          luxe
