@@ -126,6 +126,12 @@ which bank, at which offset.
 
 In `MEMLIST.BIN`, the bank IDs are numeric, thus ranging from 1 to 13.
 
+
+## Resources
+
+I have written some code to parse the `MEMLIST.BIN` file and generate
+equivalent SQL statements. See the [`Makefile`](Makefile).
+
 For instance the bank 9 contains resource types `Palette`,
 `Bytecode`, and `Cinematic`:
 
@@ -136,7 +142,7 @@ Bytecode
 Cinematic
 ```
 
-The first resouce in each bank starts at offset 0. There are "empty" resources
+The first resource in each bank starts at offset 0. There are "empty" resources
 (with a size of zero), and a non-empty one at offset 0 in bank 1.
 
 There a multiple resources whose size are zero; three of them have the same
@@ -437,3 +443,8 @@ When launching the game, there is a Steam menu to either view Bonus content,
 which just opens the directory within a browser...
 
 Within the game menu, it is possible to choose low or high resolution.
+
+
+## TODO
+
+- I think the `memlist` table should be renamed `resources`.
