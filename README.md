@@ -79,6 +79,36 @@ Having such a relational database to query is really a nice way to explore the
 data, as can be seen in some notes below.
 
 
+## Parts
+
+In both
+[Fabien's](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/6093bbca11b046a64557354eb4c237b0318f4ec7/src/parts.cpp)
+and
+[Gregory's](https://github.com/cyxx/rawgl/blob/8b4c255453229bca15df715961554f85adec8eb5/resource.cpp#L566-L577)
+versions, the list of game "parts" are hard-coded, and for each part, the
+palette, virtual machine instructions, and graphics (both cinematics and
+gameplay) IDs (i.e. indices into `MEMLIST.BIN`) are known.
+
+I have also created hard-coded data for SQLite:
+
+```
+$ sqlite3 -init sqliterc.txt exploring.db 'select * from parts'
+-- Loading resources from sqliterc.txt
+id          palette     bytecode    cinematics  characters  comment
+----------  ----------  ----------  ----------  ----------  ------------------
+16000       20          21          22          0           protection screens
+16001       23          24          25          0           introduction cinem
+16002       26          27          28          17          water
+16003       29          30          31          17          suspended jail
+16004       32          33          34          17          cite
+16005       35          36          37          0           battlechar cinemat
+16006       38          39          40          17          luxe
+16007       41          42          43          17          final
+16008       125         126         127         0           password screen
+16009       125         126         127         0           password screen
+```
+
+
 ## Notes
 
 There are 13 `BANK` files, from `BANK01` to `BANK0D`. Bank IDs in `MEMLIST.BIN`
@@ -242,36 +272,6 @@ terminate called after throwing an instance of 'std::out_of_range'
   what():  stoi
 scripts/unpack-all.sh: line 147: 29407 Aborted
 (core dumped) unpack/unpack 146 255 4294967295 65535 65535
-```
-
-
-## Parts
-
-In both
-[Fabien's](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/6093bbca11b046a64557354eb4c237b0318f4ec7/src/parts.cpp)
-and
-[Gregory's](https://github.com/cyxx/rawgl/blob/8b4c255453229bca15df715961554f85adec8eb5/resource.cpp#L566-L577)
-versions, the list of game "parts" are hard-coded, and for each part, the
-palette, virtual machine instructions, and graphics (both cinematics and
-gameplay) IDs (i.e. indices into `MEMLIST.BIN`) are known.
-
-I have also created hard-coded data for SQLite:
-
-```
-$ sqlite3 -init sqliterc.txt exploring.db 'select * from parts'
--- Loading resources from sqliterc.txt
-id          palette     bytecode    cinematics  characters  comment
-----------  ----------  ----------  ----------  ----------  ------------------
-16000       20          21          22          0           protection screens
-16001       23          24          25          0           introduction cinem
-16002       26          27          28          17          water
-16003       29          30          31          17          suspended jail
-16004       32          33          34          17          cite
-16005       35          36          37          0           battlechar cinemat
-16006       38          39          40          17          luxe
-16007       41          42          43          17          final
-16008       125         126         127         0           password screen
-16009       125         126         127         0           password screen
 ```
 
 
