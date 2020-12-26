@@ -271,7 +271,7 @@ Within a Bytecode resource, there is the code for multiple threads. Thread 0
 starts with the first byte of the bytecode. I'm not sure yet, but I think the
 other threads are spawned from other threads and don't exist statically.
 
-I have bytecode parser. To help validate it, I have found a
+I have a bytecode parser. To help validate it, I have found a
 [disassembler](https://github.com/cyxx/rawgl/blob/master/tools/disasm/disasm.cpp)
 in the rawgl repository. This is also helpful to give names to some operations
 that don't have explicit opcodes elsewhere.
@@ -307,7 +307,7 @@ $ rawgl/tools/disasm/disasm resources/unpacked-021.bin | head
 
 ## Polygons
 
-By reading how the OpDrawPolygon opcode is implemented in either source code,
+By reading how the `OpDrawPolygon` opcode is implemented in either source code,
 we can learn how graphic data can be found. This simply seems to be given by an
 offset into the graphic data (either cinematics or gameplay).
 
@@ -323,7 +323,7 @@ there is a line which offers a lot of clue:
 ```
 
 The formula `x + y * stride` is typical of pixel addressing in a 1d-array. We
-already know that each byte represents a two pixels, which is confirmed by `*
+already know that each byte represents two pixels, which is confirmed by `*
 160`: advancing to the next line (i.e. by 320 pixels) is done by advancing by
 160 bytes.
 
@@ -333,7 +333,7 @@ done to cover 8 pixels vertically.
 
 At each iteration, it loops 4 times horizontaly, exploiting each time 2 bits of
 a `_font` entry. So I assume each `_font` entry specifies 8 pixels that should
-"on" of "off".
+"on" or "off".
 
 For each "on" pixel, 4 bits of the given color are used. When a pixel is "off",
 the color already present in the target buffer is reused.
@@ -409,11 +409,9 @@ Within the game menu, it is possible to choose low or high resolution.
 
 # TODO
 
-A possible organisation for these notes, once they ar more complete: start with
-the DOS files, i.e. describe `BANK`s and `MEMLIST.BIN`. Then continue with
+A possible organisation for these notes, once they are more complete: start
+with the DOS files, i.e. describe `BANK`s and `MEMLIST.BIN`. Then continue with
 hard-coded data within the source code, in particular "parts".
 
 Then describe each type of resources, starting with Palette (the smallest
 resources). Then bytecode ?
-
-
