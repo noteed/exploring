@@ -237,56 +237,6 @@ $ for i in `seq 0 31` ; do bin/exploring write-palette $i ; done
 $ feh -Zr. images/
 ```
 
-## Unpack
-
-While trying to understand `Bank::unpack` in Fabien's repository, I found that
-Gregory's version in rawgl is easier to read. I looked at the code several
-times on the span of three or four days. Interestingly, my understanding of it
-increased each time in the first few minutes at staring at the code (as opposed
-to the long minutes afterwards).
-
-Anyway, I also found an interesting commit message in rawgl, mentionning
-"ByteKiller". I first thought it was another version of similar code but it
-seems it is the name of the compression software: as it was mentioned nowhere
-else, this is an interesting find!
-
-I have made a copy of rawgl's `unpack.cpp` in `unpack/` in this repository.
-After adding the `READ_BE_UINT32` macro and the `warning` function, the file
-compiles fine with `g++ -c unpack.cpp`. Then I added a `main` function to read
-a resource from a `BANK` file:
-
-```
-$ ls unpack
-unpack.cpp
-$ g++ -o unpack/unpack unpack/unpack.cpp
-$ unpack/unpack 020 1 95176 836 2048
-$ ls -l resources/unpacked-020.bin
--rw-r--r-- 1 thu users  2048 Oct 17 14:45 resources/unpacked-020.bin
-```
-
-The arguments are the resource ID (this is just used to name the output file),
-the bank ID, the offset within the BANK file, the packed size, and the unpacked
-size. A helper script `scripts/unpack-all.sh` is generated with the appropriate
-values (see the `Makefile` to see how).
-
-Some of the calls are wrong, especially the last one:
-
-```
-$ sh scripts/unpack-all.sh
-WARNING: Unexpected unpack size 285542123, buffer size 882!
-WARNING: Unexpected unpack size 50528001, buffer size 7684!
-WARNING: Unexpected unpack size 50529028, buffer size 5420!
-WARNING: Unexpected unpack size 990122782, buffer size 1460!
-WARNING: Unexpected unpack size 99937556, buffer size 4848!
-WARNING: Unexpected unpack size 1460146100, buffer size 11880!
-WARNING: Unexpected unpack size 50266370, buffer size 17500!
-WARNING: Unexpected unpack size 50528001, buffer size 4886!
-terminate called after throwing an instance of 'std::out_of_range'
-  what():  stoi
-scripts/unpack-all.sh: line 147: 29407 Aborted
-(core dumped) unpack/unpack 146 255 4294967295 65535 65535
-```
-
 
 ## Bytecode
 
@@ -371,6 +321,57 @@ the color already present in the target buffer is reused.
 
 In short, the font is made from 8x8 characters, specified by 8 entries in
 `_font`. This is confirmed by the `bin/exploring-font.hs` script.
+
+
+## Unpack
+
+While trying to understand `Bank::unpack` in Fabien's repository, I found that
+Gregory's version in rawgl is easier to read. I looked at the code several
+times on the span of three or four days. Interestingly, my understanding of it
+increased each time in the first few minutes at staring at the code (as opposed
+to the long minutes afterwards).
+
+Anyway, I also found an interesting commit message in rawgl, mentionning
+"ByteKiller". I first thought it was another version of similar code but it
+seems it is the name of the compression software: as it was mentioned nowhere
+else, this is an interesting find!
+
+I have made a copy of rawgl's `unpack.cpp` in `unpack/` in this repository.
+After adding the `READ_BE_UINT32` macro and the `warning` function, the file
+compiles fine with `g++ -c unpack.cpp`. Then I added a `main` function to read
+a resource from a `BANK` file:
+
+```
+$ ls unpack
+unpack.cpp
+$ g++ -o unpack/unpack unpack/unpack.cpp
+$ unpack/unpack 020 1 95176 836 2048
+$ ls -l resources/unpacked-020.bin
+-rw-r--r-- 1 thu users  2048 Oct 17 14:45 resources/unpacked-020.bin
+```
+
+The arguments are the resource ID (this is just used to name the output file),
+the bank ID, the offset within the BANK file, the packed size, and the unpacked
+size. A helper script `scripts/unpack-all.sh` is generated with the appropriate
+values (see the `Makefile` to see how).
+
+Some of the calls are wrong, especially the last one:
+
+```
+$ sh scripts/unpack-all.sh
+WARNING: Unexpected unpack size 285542123, buffer size 882!
+WARNING: Unexpected unpack size 50528001, buffer size 7684!
+WARNING: Unexpected unpack size 50529028, buffer size 5420!
+WARNING: Unexpected unpack size 990122782, buffer size 1460!
+WARNING: Unexpected unpack size 99937556, buffer size 4848!
+WARNING: Unexpected unpack size 1460146100, buffer size 11880!
+WARNING: Unexpected unpack size 50266370, buffer size 17500!
+WARNING: Unexpected unpack size 50528001, buffer size 4886!
+terminate called after throwing an instance of 'std::out_of_range'
+  what():  stoi
+scripts/unpack-all.sh: line 147: 29407 Aborted
+(core dumped) unpack/unpack 146 255 4294967295 65535 65535
+```
 
 
 ## Steam
