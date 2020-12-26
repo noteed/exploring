@@ -81,15 +81,18 @@ data, as can be seen in some notes below.
 
 ## Parts
 
+The game is organized in 9 "parts", which include e.g. the "Suspended jail",
+but also the protection and password screens.
+
 In both
 [Fabien's](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/6093bbca11b046a64557354eb4c237b0318f4ec7/src/parts.cpp)
 and
 [Gregory's](https://github.com/cyxx/rawgl/blob/8b4c255453229bca15df715961554f85adec8eb5/resource.cpp#L566-L577)
-versions, the list of game "parts" are hard-coded, and for each part, the
-palette, virtual machine instructions, and graphics (both cinematics and
-gameplay) IDs (i.e. indices into `MEMLIST.BIN`) are known.
+versions, the list of game parts is hard-coded, and for each part, the resource
+IDs are known: palette, virtual machine instructions, and graphics (both
+cinematics and gameplay).
 
-I have also created hard-coded data for SQLite:
+I have also created [hard-coded data](exploring-parts.sql) for SQLite:
 
 ```
 $ sqlite3 -init sqliterc.txt exploring.db 'select * from parts'
@@ -108,12 +111,22 @@ id          palette     bytecode    cinematics  characters  comment
 16009       125         126         127         0           password screen
 ```
 
+Note that there are 10 lines in but I count the last two as a single part.
 
-## Notes
 
-There are 13 `BANK` files, from `BANK01` to `BANK0D`. Bank IDs in `MEMLIST.BIN`
-are numeric, thus ranging from 1 to 13. A given bank can contain multiple
-resource types. For instance the bank 9 contains resource types `Palette`,
+## Files
+
+The game data are placed in 13 `BANK` files, from `BANK01` to `BANK0D`.
+A given bank can contain multiple resource types (palette, bytecode, ...).
+
+Resource IDs, as given in the previous section, are indices into a file called
+`MEMLIST.BIN`. Given a resource, `MEMLIST.BIN` is read by the game engine to
+know where the resource data themselves (e.g. palette colors) can be found: in
+which bank, at which offset.
+
+In `MEMLIST.BIN`, the bank IDs are numeric, thus ranging from 1 to 13.
+
+For instance the bank 9 contains resource types `Palette`,
 `Bytecode`, and `Cinematic`:
 
 ```
@@ -123,8 +136,8 @@ Bytecode
 Cinematic
 ```
 
-The first resouce in each bank starts at offset 0. There are an "empty"
-resource (its size is zero), and a non-empty one at offset 0 in bank 1.
+The first resouce in each bank starts at offset 0. There are "empty" resources
+(with a size of zero), and a non-empty one at offset 0 in bank 1.
 
 There a multiple resources whose size are zero; three of them have the same
 bank ID and offset: 8 and 115980.
@@ -164,7 +177,7 @@ $ xxd palette-1 | tail -n 1
 We see that `8 * 256 = 2048`, wich is indeed the unpacked size of any palette.
 
 
-### Palettes
+## Palettes
 
 All resources of type `Palette` have an uncompressed size of 2048 (and their
 sizes within the `BANK` files are smaller, so the palettes are all compressed).
