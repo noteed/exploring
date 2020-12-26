@@ -224,7 +224,25 @@ $ ls -l resources/unpacked-020.bin
 The arguments are the resource ID (this is just used to name the output file),
 the bank ID, the offset within the BANK file, the packed size, and the unpacked
 size. A helper script `scripts/unpack-all.sh` is generated with the appropriate
-values.
+values (see the `Makefile` to see how).
+
+Some of the calls are wrong, especially the last one:
+
+```
+$ sh scripts/unpack-all.sh
+WARNING: Unexpected unpack size 285542123, buffer size 882!
+WARNING: Unexpected unpack size 50528001, buffer size 7684!
+WARNING: Unexpected unpack size 50529028, buffer size 5420!
+WARNING: Unexpected unpack size 990122782, buffer size 1460!
+WARNING: Unexpected unpack size 99937556, buffer size 4848!
+WARNING: Unexpected unpack size 1460146100, buffer size 11880!
+WARNING: Unexpected unpack size 50266370, buffer size 17500!
+WARNING: Unexpected unpack size 50528001, buffer size 4886!
+terminate called after throwing an instance of 'std::out_of_range'
+  what():  stoi
+scripts/unpack-all.sh: line 147: 29407 Aborted
+(core dumped) unpack/unpack 146 255 4294967295 65535 65535
+```
 
 
 ## Parts
