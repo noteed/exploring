@@ -141,20 +141,20 @@ sizes within the `BANK` files are smaller, so the palettes are all compressed).
 
 ```
 $ sqlite3 -init sqliterc.txt exploring.db \
-    'select bank_id,bank_offset,size,packed_size from memlist
-     where type="Palette" order by bank_id, bank_offset'
+    'select id,bank_id,bank_offset,packed_size,size from memlist
+     where type="Palette" order by id'
 -- Loading resources from sqliterc.txt
-bank_id     bank_offset  size        packed_size
-----------  -----------  ----------  -----------
-1           95176        2048        836
-1           102512       2048        1336
-3           0            2048        1196
-9           0            2048        1268
-10          0            2048        1260
-10          30140        2048        1312
-11          0            2048        1220
-13          0            2048        1228
-13          60108        2048        1376
+id   bank_id  bank_offset  packed_size  size
+---  -------  -----------  -----------  ----
+20   1        95176        836          2048
+23   1        102512       1336         2048
+26   13       0            1228         2048
+29   13       60108        1376         2048
+32   3        0            1196         2048
+35   10       0            1260         2048
+38   10       30140        1312         2048
+41   11       0            1220         2048
+125  9        0            1268         2048
 ```
 
 The comment in the [source
