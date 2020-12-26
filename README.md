@@ -436,13 +436,3 @@ When launching the game, there is a Steam menu to either view Bonus content,
 which just opens the directory within a browser...
 
 Within the game menu, it is possible to choose low or high resolution.
-
-
-# TODO
-
-A possible organisation for these notes, once they are more complete: start
-with the DOS files, i.e. describe `BANK`s and `MEMLIST.BIN`. Then continue with
-hard-coded data within the source code, in particular "parts".
-
-Then describe each type of resources, starting with Palette (the smallest
-resources). Then bytecode ?
