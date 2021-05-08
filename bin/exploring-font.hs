@@ -9,14 +9,14 @@ import Data.Bits (testBit)
 
 --------------------------------------------------------------------------------
 -- There are 96 * 8 entries in the `font` list below, i.e. 96 characters.
--- Each character is described by 8 byte, i.e. one line of source code in this
--- file. Thus a character is made ox 8x8 pixels.
+-- Each character is described by 8 bytes, i.e. one line of source code in this
+-- file. Thus a character is made of 8x8 pixels.
 main :: IO ()
 main = mapM_ (putStr . showCharacter . (*8)) [0..95]
 
 
 --------------------------------------------------------------------------------
--- This is a copy of staticres.cpp's _font, 8 bytes per line (instead of 16).
+-- | This is a copy of staticres.cpp's _font, 8 bytes per line (instead of 16).
 -- This is a subset of the ASCII code, with some characters replaced.
 font :: [Word8]
 font = [
@@ -115,7 +115,7 @@ font = [
   0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0x00, -- black
   0x38, 0x44, 0xBA, 0xA2, 0xBA, 0x44, 0x38, 0x00, -- copyright
   0x38, 0x44, 0x82, 0x82, 0x44, 0x28, 0xEE, 0x00, -- omega
-  0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA ] -- black
+  0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA] -- grey
 
 -- | Given 1 Word8, display an x for each "on" bit.
 showCharacterLine byte =
