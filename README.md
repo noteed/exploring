@@ -33,9 +33,17 @@ resources linked below, then wrote some code to explore the game data.
 It seems the data of the PC version can be downloaded
 [here](https://www.abandonware-france.org/ltf_abandon/ltf_jeu.php?id=68).
 
+The original English Amiga version, with the protection screen disabled, are
+available in the Retro Presskit here: [the Digital Lounge
+presskit](http://www.thedigitalounge.com/presskit.html). The two `.adf` files
+are the same as the one present in the 20th anniversary edition available on
+Steam.
+
 One of the most interesting resources is actually a commentary within the [main
 file](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/8afc0f7d7d47f7700ad2e7d1cad33200ad29b17f/src/main.cpp)
-in the above repository.
+in the above repository. It links to a fan site on Google Sites, which seems
+down but is still available on the [Waybach
+Machine](https://web.archive.org/web/20141013135226/https://sites.google.com/site/interlinkknight/anotherworld).
 
 Some code is more readable in the original repository than in Fabien's. For
 instance the code to decompress resources:
