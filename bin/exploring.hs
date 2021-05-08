@@ -29,7 +29,7 @@ main = do
       putStrLn ";"
 
     ["read-bank", bankId, bankOffset, packedSize] -> do
-      -- For instance to read the first pallete, which has also the smallest
+      -- For instance to read the first palette, which has also the smallest
       -- packed size:
       -- read-bank 1 95176 836
       s <- readBank (read bankId) (read bankOffset) (read packedSize)
@@ -37,10 +37,10 @@ main = do
 
     ["write-palette", n] -> do
       -- Write the ith palette from unpacked.bin to a .png file.
-      let i = read n
       colors <- readColors "resources/unpacked-020.bin"
       -- Skip i palettes, and each color will cover 20 pixels.
-      let f x y = (drop (i * 16) colors) !! (x `div` 20)
+      let i = read n
+          f x y = (drop (i * 16) colors) !! (x `div` 20)
           img = generateImage f 320 240
       writePng (printf "images/palette-%02d.png" i) img
 
