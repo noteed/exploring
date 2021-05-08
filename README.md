@@ -8,11 +8,11 @@ the software is that it is mainly written as a virtual machine.
 It all started the 2020-10-11 when I finally, after a long time, decided to
 play again with graphics programming in Haskell. (This probably was itself
 prompted by turning on my PlayStation 3, running Grid, whose first saved game
-was from 2010). Then the night after, I had some trouble sleeping and started
+was from 2010.) Then the night after, I had some trouble sleeping and started
 to read about Another World. In particular, the Wikipedia page (at least the
 one [in
-French](https://fr.wikipedia.org/wiki/Another_World_(jeu_vid%C3%A9o)#Aspect_technique)
-talks about a a game engine witten as a virtual machine running multiple light
+French](https://fr.wikipedia.org/wiki/Another_World_(jeu_vid%C3%A9o)#Aspect_technique))
+talks about a game engine written as a virtual machine running multiple light
 threads. This got me curious and I wanted to read more. I started with the
 resources linked below, then wrote some code to explore the game data.
 
@@ -39,13 +39,13 @@ in the above repository.
 Some code is more readable in the original repository than in Fabien's. For
 instance the code to decompress resources:
 [Fabien's](https://github.com/fabiensanglard/Another-World-Bytecode-Interpreter/blob/master/src/bank.cpp)
-v. [Gregory's](https://github.com/cyxx/rawgl/blob/master/unpack.cpp)
+v. [Gregory's](https://github.com/cyxx/rawgl/blob/master/unpack.cpp).
 
-The commit comment in Gregrory's seems to say the unpacking code is similar to
+The commit comment in Gregory's seems to say the unpacking code is similar to
 this one: https://git.gatekiller.co.uk/games/flashback.
 [Indeed](https://git.gatekiller.co.uk/games/flashback/src/branch/master/unpack.cpp).
 
-There is an interesting `docs/` directory in rawgl repository.
+There is an interesting `docs/` directory in the `rawgl` repository.
 
 
 ## Current state
@@ -111,7 +111,7 @@ id          palette     bytecode    cinematics  characters  comment
 16009       125         126         127         0           password screen
 ```
 
-Note that there are 10 lines in but I count the last two as a single part.
+Note that there are 10 lines but I count the last two as a single part.
 
 
 ## Files
@@ -212,7 +212,7 @@ says the 2048 bytes are used for a VGA palette, and an EGA palette, each 1024
 bytes.
 
 In the game, each pixel color is given by a 4-bit index into the palette (so 1
-byte is enough to describe two pixels.
+byte is enough to describe two pixels).
 
 Within the pallete, a color is specified using 5 bits for red, 6 bits for
 green, and 5 bits for blue, i.e. a 565 format, and thus takes 2 bytes.
@@ -233,7 +233,8 @@ $ feh images/palette-01.png
 ![Palette 27](images/palette-27.png)
 
 I was unsure if the code to read the palette was correct, but the second image
-above seems to match the colors seen in the title screens at the start of game.
+above seems to match the colors seen in the title screens at the start of the
+game.
 
 Only the two images above are committed in this repository. If you want to generate
 some other images:
@@ -250,9 +251,10 @@ The list of possible operations is mainly visible in `staticres.cpp`: there are 
 27 operations visible there but some additional ones are not named.
 
 Just like palettes, the "script" ID of each game part is given in the
-hard-coded data (see the Parts section above). The virtual machine implemented
-in the game reads one byte at a time, interpreting it. (This is done in the
-`vm.cpp` file.) Each operation can read additional bytes when executed.
+hard-coded data (see the [Parts](#parts) section above). The virtual machine
+implemented in the game reads one byte at a time, interpreting it. (This is
+done in the `vm.cpp` file.) Each operation can read additional bytes when
+executed.
 
 Within a Bytecode resource, there is the code for multiple threads. Thread 0
 starts with the first byte of the bytecode. I'm not sure yet, but I think the
@@ -320,7 +322,7 @@ done to cover 8 pixels vertically.
 
 At each iteration, it loops 4 times horizontaly, exploiting each time 2 bits of
 a `_font` entry. So I assume each `_font` entry specifies 8 pixels that should
-"on" or "off".
+be "on" or "off".
 
 For each "on" pixel, 4 bits of the given color are used. When a pixel is "off",
 the color already present in the target buffer is reused.
@@ -437,9 +439,9 @@ AnotherWorld_DiskA_nologo_noprotec.adf  AnotherWorld_DiskB_nologo_noprotec.adf
 
 I set `fullscreen` to false in `~/.local/share/DotEMU/Another
 World/AnotherWorldUserDef.xml`. (For Steam on my T480, which uses NixOS and
-xmonad).
+xmonad.)
 
-When launching the game, there is a Steam menu to either view Bonus content,
+When launching the game, there is a Steam menu to view some Bonus content,
 which just opens the directory within a browser...
 
 Within the game menu, it is possible to choose low or high resolution.
