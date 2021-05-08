@@ -1,9 +1,10 @@
 # Exploring Another World
 
 In this repository, I explore how Eric Chahi's Another World is implemented.
-Another World is a computer game released in 1991. It was initially written for
-the Amiga 500, and then ported to other systems. A very interesting aspect of
-the software is that it is mainly written as a virtual machine.
+Another World (also called Out of This World in North America) is a computer
+game released in 1991. It was initially written for the Amiga 500, and then
+ported to other systems. A very interesting aspect of the software is that it
+is mainly written as a virtual machine.
 
 It all started the 2020-10-11 when I finally, after a long time, decided to
 play again with graphics programming in Haskell. (This probably was itself
