@@ -434,8 +434,14 @@ of my unpacked resource files and one matches a `.pal` file in steam/game/DAT:
 
 ```
 90d179214abc7cae251eb880c193abf6b628468d  resources/unpacked-023.bin
-90d179214abc7cae251eb880c193abf6b628468d  steam/game/DAT/INTRO2011.pa
+90d179214abc7cae251eb880c193abf6b628468d  steam/game/DAT/FILE023.DAT
+90d179214abc7cae251eb880c193abf6b628468d  steam/game/DAT/INTRO2011.pal
+...
+a84d3129d6119d7669eb8179459b145cc1f543b7  resources/unpacked-125.bin
+a84d3129d6119d7669eb8179459b145cc1f543b7  steam/game/DAT/FILE125.DAT
 ```
+
+Note that multiple files in `steam/game/DAT` have the same hashes.
 
 There seems to be the Amiga version too:
 
