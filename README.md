@@ -443,6 +443,19 @@ a84d3129d6119d7669eb8179459b145cc1f543b7  steam/game/DAT/FILE125.DAT
 
 Note that multiple files in `steam/game/DAT` have the same hashes.
 
+Although not all files seem to be there, and there are more than the 146
+resources, it seems that a Music or Sound resource can be found in
+`steam/game/WGZ` (gzipped WAV files), PolyAnim resources can be found in
+`steam/game/BGZ`, and other data in `steam/game/DAT`. With resource IDs visible
+in the filename as `FILExxx.ext` or `filexxx.ext`.
+
+The following file is supposed to be a Sound, and indeed exists in `WGZ`. And
+actually here it is an empty file:
+
+```
+da39a3ee5e6b4b0d3255bfef95601890afd80709  steam/game/DAT/FILE045.DAT
+```
+
 There seems to be the Amiga version too:
 
 ```
